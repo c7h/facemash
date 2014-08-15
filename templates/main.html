@@ -6,6 +6,7 @@
 
 {% block content %}
 <div class="container">
+	
 	<div class="row clearfix">
 		<div class="col-md-12 column">
 			<div class="row">
@@ -18,13 +19,17 @@
 								<span class="badge">{{ players[1].score }}</span>
 							</h3>
 							<p>
-								<a class="btn btn-primary btn-lg btn-block" href="#">Vote</a>
+								<form method="POST">
+								{{ form.choice(value="1") }}
+								{{ form.submit(class="btn btn-primary btn-lg btn-block") }}
+								</form>
 							</p>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="thumbnail">
+						
 						<img  alt="Player2" src="{{ players[1].imgurl }}" />
 						<div class="caption">
 							<h3>
@@ -32,7 +37,10 @@
 								<span class="badge">{{ players[1].score }}</span>
 							</h3>
 							<p>
-								<a class="btn btn-primary btn-lg btn-block" href="#">Vote</a>
+								<form method="POST">
+								{{ form.choice(value="2") }}
+								{{ form.submit(class="btn btn-primary btn-lg btn-block") }}
+								</form>
 							</p>
 						</div>
 					</div>
@@ -40,6 +48,7 @@
 			</div>
 		</div>
 	</div>
+	
 </div>
 
 {% endblock %}

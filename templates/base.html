@@ -1,5 +1,15 @@
 {% extends "bootstrap/base.html" %}
 
+{% block head %}
+
+{{ super() }}
+<link rel="icon" href="{{ url_for('static', filename="favicon.ico") }}" type="image/x-icon"></link>
+<link rel="shortcut icon" href="{{ url_for('static', filename="favicon.ico") }}" type="image/x-icon"></link>
+
+
+{% endblock %}
+
+
 {% block title %}- Facemash{% endblock %}
 
 {% block navbar %}

@@ -1,0 +1,58 @@
+
+{% extends "base.html" %}
+
+{% block title %} {{ player.id }} {{ super() }}{% endblock %}
+
+{% block content %}
+
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<h3>
+				{{ player.id }}
+			</h3>
+			<div class="row clearfix">
+				<div class="col-md-8 column">
+					<div class="thumbnail">
+						<img class="img-rounded" alt="{{ player.id }}" src="{{ player.imgurl }}" />
+					</div>
+				</div>
+				<div class="col-md-4 column">
+					<table class="table">
+						<thead>
+							<h3>stats</h3>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									score
+								</td>
+								<td>
+									{{ player.score }}
+								</td>
+							</tr>
+							<tr>
+								<td>
+									matches
+								</td>
+								<td>
+									{{ player.matches }}
+								</td>
+							</tr>
+							<tr>
+								<td>
+									wins
+								</td>
+								<td>
+									{{ player.wins }}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
