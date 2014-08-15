@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+
+{% block title %} {{ players[0].id }} vs. {{ players[1].id }} {% endblock %}
+
+
+{% block head %}
+
+{{ super() }}
+
+{% endblock %}
+
+
+{% block body %}
+
+<img src="{{ players[0].imgurl }}"></img>
+<a> Player: {{ players[0].id }} </a>
+
+<img src="{{ players[1].imgurl }}"></img>
+<a> Player: {{ players[1].id }} </a>
+
+{% endblock %}

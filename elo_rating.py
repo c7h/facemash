@@ -14,6 +14,8 @@ class Player(object):
         self.score = score
         self.wins = 0
         self.matches = 0
+        
+        self.imgurl="http://img.thesun.co.uk/aidemitlum/archive/01643/_Mila_Kunis_1643489a.jpg"
     
     def set_score(self, new_score):
         self.score = new_score
@@ -101,7 +103,7 @@ class Elo:
     
     
     def decide(self, p1, p2):
-        '''decision function - who should win?'''
+        '''decision function - who should win? @return: (winner, looser)'''
         #strategy: manual decision
         print "hard decision: %s vs %s" % (p1, p2)
         while True:
