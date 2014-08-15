@@ -9,13 +9,13 @@ INITIAL_SCORE = 1500.0
 K = 10
 
 class Player(object):
-    def __init__(self, ident, score=INITIAL_SCORE):
+    def __init__(self, ident, score=INITIAL_SCORE, image_url=""):
         self.id = ident
         self.score = score
         self.wins = 0
         self.matches = 0
         
-        self.imgurl="http://img.thesun.co.uk/aidemitlum/archive/01643/_Mila_Kunis_1643489a.jpg"
+        self.imgurl= image_url
     
     def set_score(self, new_score):
         self.score = new_score

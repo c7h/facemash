@@ -1,19 +1,27 @@
-<html>
-<head>
-{% block head %}
-<title>{% block title %}{% endblock %} - Facemash beta</title>
-{% endblock %}
-</head>
+{% extends "bootstrap/base.html" %}
 
-<body>
-<h1>this is Facemash!</h1>
-<br>
+{% block title %}- Facemash{% endblock %}
 
-{% block body %}
-{% endblock %}
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">Facemash</a>	
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav">
+				<li><a href="/">Home</a></li>
+				<li><a href="/ranking">Ranking</a></li>
+			</ul>
+			
+		</div>
+	</div>
+</div>
 
-<br>
-<h3>have fun!</h3>
-
-</body>
-</html>
+{% endblock %}	

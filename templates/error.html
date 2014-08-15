@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+
+{% block title %} page not found {{ super() }} {% endblock %}
+
+
+{% block content %}
+
+<div class="jumbotron">
+  <h1>{{ code }}</h1>
+  <div class="alert alert-danger" role="alert">
+  		<p>{{ message  }}</p>
+  </div>
+  
+</div>
+
+{% endblock %}
