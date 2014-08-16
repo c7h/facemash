@@ -4,13 +4,15 @@ Created on 15.08.2014
 @author: christoph
 '''
 
-from flask import Flask, render_template
+from flask import Flask, render_template, session
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
-from flask_script import Manager, Shell
+#from flask_script import Manager, Shell
 from flask_wtf import Form
 
 from wtforms.fields.simple import SubmitField, HiddenField
+
+from elo import Elo
 
 import os
 from datetime import datetime
@@ -23,10 +25,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = '169d7c24b62bb17eafcc2bcded23e888'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.sqlite')
 
-manager = Manager(app)
+#manager = Manager(app)
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
-
+elo = Elo()
 
 ##Database Model Definition
 
@@ -43,44 +45,65 @@ class Player(db.Model):
     def __repr__(self):
         return "<Player %s>" % self.id
 
-
 ##Views
 
 @app.route("/", methods=['GET', 'POST'])
 def mainpage():
     buttonForm = ButtonForm()
     
-    #load 2 different, random players from db
-    player_context = [__get_random_player(), __get_random_player()]
-    while player_context[0] is player_context[1]:
+    #load 2 different, random players from db - the first one with less matches
+    player_context = [__get_random_player(match_treshold=30), __get_random_player()]
+    while player_context[0].id == player_context[1].id:
         player_context[1] = __get_random_player()
-        
+    
+    if session.new:
+        session['player_store'] = [x.id for x in player_context]
+    
     if buttonForm.is_submitted():
-        choice = buttonForm.choice.data
-        choosen_player = player_context[choice-1]
-        print "user voted", choosen_player
+        choice = int(buttonForm.choice.data)
+        winner_id = session['player_store'][choice-1]
+        looser_id = session['player_store'][choice-2]
         
+        winner = Player.query.get(winner_id)
+        looser = Player.query.get(looser_id)
+        
+        print "[USER VOTED]: winner %s - looser: %s" % (winner, looser)
+        winner, looser = elo.match(winner, looser)
+        db.session.commit()
+    
+    session['player_store'] = [x.id for x in player_context]
+
+
     return render_template('main.html', players=player_context, form=buttonForm)
 
-def __get_random_player():
-    rand = random.randrange(0, Player.query.count())
-    return Player.query.get(rand)
+def __get_random_player(match_treshold=None):
+    '''load a random player from database. 
+    match_treshold is between 0 and 100.'''
+    count = Player.query.count()
+    if match_treshold:
+        rand = random.randint(1, count*0.01*match_treshold)
+        pl = Player.query.order_by(Player.matches).get(rand)
+    else:
+        rand = random.randint(1, count)
+        pl = Player.query.get(rand)
+    
+    return pl
 
-@app.route("/ranking")
-def ranking():
-    #top_ten = sorted(players, key=lambda x: x.score, reverse=True)[0:10]
-    top_ten = Player.query.order_by(Player.score).limit(10).all()22
-    return render_template('ranking.html', players=top_ten)
+@app.route("/ranking/<int:limit>")
+def ranking(limit):
+    limit = min(limit, 100)
+    top = Player.query.order_by(Player.score).limit(limit).all()
+    return render_template('ranking.html', players=top)
 
-@app.route("/player/<name>")
-def player_details(name):
-    #player = filter(lambda x: x.id == player_id, players)[0]
-    player = Player.query.filter_by(name=name)
+@app.route("/player/<id>")
+def player_details(id):
+    player = Player.query.filter_by(id=id).first()
     return render_template('overview.html', player=player)
 
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('error.html', message="sorry, your are wrong: %s" % e, code=404), 404
+
 
 @app.errorhandler(500)
 def internal_server_error(e):
@@ -95,15 +118,15 @@ class ButtonForm(Form):
     submit = SubmitField("Vote")
     
 
-
     
-
+'''
 #for debugging only
 def make_shell_context():
     return dict(app=app, db=db, Player=Player)
 manager.add_command("shell", Shell(make_context=make_shell_context))
+'''
 
 if __name__ == '__main__':
-    manager.run()
-    #app.run()
+    #manager.run()
+    app.run(debug=True)
     
