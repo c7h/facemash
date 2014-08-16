@@ -1,7 +1,7 @@
 
 {% extends "base.html" %}
 
-{% block title %} {{ player.id }} {{ super() }}{% endblock %}
+{% block title %} {{ player.name }} {{ super() }}{% endblock %}
 
 {% block content %}
 
@@ -9,12 +9,12 @@
 	<div class="row clearfix">
 		<div class="col-md-12 column">
 			<h3>
-				{{ player.id }}
+				{{ player.name }}
 			</h3>
 			<div class="row clearfix">
 				<div class="col-md-8 column">
 					<div class="thumbnail">
-						<img class="img-rounded" alt="{{ player.id }}" src="{{ player.imgurl }}" />
+						<img class="img-rounded" alt="{{ player.name }}" src="/static/face/{{ player.imgurl }}" />
 					</div>
 				</div>
 				<div class="col-md-4 column">

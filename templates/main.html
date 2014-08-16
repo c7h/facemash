@@ -1,7 +1,7 @@
 
 {% extends "base.html" %}
 
-{% block title %} {{ players[0].id }} vs. {{ players[1].id }} {{ super() }}{% endblock %}
+{% block title %} {{ players[0].name }} vs. {{ players[1].name }} {{ super() }}{% endblock %}
 
 
 {% block content %}
@@ -15,8 +15,8 @@
 						<img alt="Player1" src="/static/face/{{ players[0].imgurl }}" />
 						<div class="caption">
 							<h3>
-								{{ players[0].name }}
-								<span class="badge">{{ players[1].score }}</span>
+								<a href="/player/{{ players[0].id }}">{{ players[0].name }}</a>
+								<span class="badge">{{ players[0].score }}</span>
 							</h3>
 							<p>
 								<form method="POST">
@@ -33,7 +33,7 @@
 						<img alt="Player2" src="/static/face/{{ players[1].imgurl }}" />
 						<div class="caption">
 							<h3>
-								{{ players[1].name }}
+								<a href="/player/{{ players[1].id }}">{{ players[1].name }}</a>
 								<span class="badge">{{ players[1].score }}</span>
 							</h3>
 							<p>
