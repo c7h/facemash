@@ -7,7 +7,7 @@ Created on 15.08.2014
 from flask import Flask, render_template, session
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
-#from flask_script import Manager, Shell
+from flask_script import Manager, Shell
 from flask_wtf import Form
 
 from wtforms.fields.simple import SubmitField, HiddenField
@@ -25,7 +25,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = '169d7c24b62bb17eafcc2bcded23e888'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.sqlite')
 
-#manager = Manager(app)
+manager = Manager(app)
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 elo = Elo()
@@ -35,11 +35,11 @@ elo = Elo()
 class Player(db.Model):
     __tablename__ = 'player'
     id = db.Column(db.Integer, primary_key=True, index=True)
-    name = db.Column(db.String(64), nullable=False)
+    name = db.Column(db.Unicode(64), nullable=False)
     score = db.Column(db.Float, default=1500.00)
     wins = db.Column(db.Integer, default=0)
     matches = db.Column(db.Integer, default=0)
-    imgurl = db.Column(db.String(254))
+    imgurl = db.Column(db.Unicode(254))
     added = db.Column(db.DateTime, default=datetime.now())
     
     def __repr__(self):
@@ -51,8 +51,8 @@ class Player(db.Model):
 def mainpage():
     buttonForm = ButtonForm()
     
-    #load 2 different, random players from db - the first one with less matches
-    player_context = [__get_random_player(match_treshold=30), __get_random_player()]
+    #load 2 different, random players from db - first one with less matches
+    player_context = [__get_random_player(match_treshold=35), __get_random_player()]
     while player_context[0].id == player_context[1].id:
         player_context[1] = __get_random_player()
     
@@ -81,10 +81,10 @@ def __get_random_player(match_treshold=None):
     match_treshold is between 0 and 100.'''
     count = Player.query.count()
     if match_treshold:
-        rand = random.randint(1, count*0.01*match_treshold)
-        pl = Player.query.order_by(Player.matches).get(rand)
+        rand = random.randint(0, int(count*0.01*match_treshold))
+        pl = Player.query.order_by(Player.matches.asc())[rand]
     else:
-        rand = random.randint(1, count)
+        rand = random.randrange(1, count+1)
         pl = Player.query.get(rand)
     
     return pl
@@ -92,7 +92,7 @@ def __get_random_player(match_treshold=None):
 @app.route("/ranking/<int:limit>")
 def ranking(limit):
     limit = min(limit, 100)
-    top = Player.query.order_by(Player.score).limit(limit).all()
+    top = Player.query.order_by(Player.score.desc()).limit(limit).all()
     return render_template('ranking.html', players=top)
 
 @app.route("/player/<id>")
@@ -119,14 +119,14 @@ class ButtonForm(Form):
     
 
     
-'''
+
 #for debugging only
 def make_shell_context():
     return dict(app=app, db=db, Player=Player)
 manager.add_command("shell", Shell(make_context=make_shell_context))
-'''
+
 
 if __name__ == '__main__':
-    #manager.run()
-    app.run(debug=True)
+    manager.run()
+    #app.run(debug=True)
     
