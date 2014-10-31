@@ -3,7 +3,7 @@
 '''
 Created on 15.08.2014
 
-@author: christoph
+@author: Christoph Gerneth
 '''
 
 from flask import Flask, render_template, session, url_for
@@ -43,50 +43,48 @@ class Player(db.Model):
     matches = db.Column(db.Integer, default=0)
     imgurl = db.Column(db.Unicode(254))
     added = db.Column(db.DateTime, default=datetime.now())
-    
+
     def __repr__(self):
         return "<Player %s>" % self.id
-    
+
     @property
     def image(self):
         fn = "face/%s" % self.imgurl
         return url_for('static', filename=fn)
-    
-    
 
 ##Views
 
 @app.route("/", methods=['GET', 'POST'])
 def mainpage():
     buttonForm = ButtonForm()
-    
+
     #load 2 different, random players from db - first one with less matches
     player_context = [__get_random_player(match_treshold=35), __get_random_player()]
     while player_context[0].id == player_context[1].id:
         player_context[1] = __get_random_player()
-    
+
     if session.new:
         session['player_store'] = [x.id for x in player_context]
-    
+
     if buttonForm.is_submitted():
         choice = int(buttonForm.choice.data)
         winner_id = session['player_store'][choice-1]
         looser_id = session['player_store'][choice-2]
-        
+
         winner = Player.query.get(winner_id)
         looser = Player.query.get(looser_id)
-        
+
         #print "[USER VOTED]: winner %s - looser: %s" % (winner, looser)
         winner, looser = elo.match(winner, looser)
         db.session.commit()
-    
+
     session['player_store'] = [x.id for x in player_context]
 
 
     return render_template('main.html', players=player_context, form=buttonForm)
 
 def __get_random_player(match_treshold=None):
-    '''load a random player from database. 
+    '''load a random player from database.
     match_treshold is between 0 and 100.'''
     count = Player.query.count()
     if match_treshold:
@@ -95,7 +93,7 @@ def __get_random_player(match_treshold=None):
     else:
         rand = random.randrange(1, count+1)
         pl = Player.query.get(rand)
-    
+
     return pl
 
 @app.route("/ranking/<int:limit>")
@@ -125,9 +123,7 @@ def internal_server_error(e):
 class ButtonForm(Form):
     choice = HiddenField("choice")
     submit = SubmitField("Vote")
-    
 
-    
 
 #for debugging only
 def make_shell_context():
@@ -138,4 +134,3 @@ manager.add_command("shell", Shell(make_context=make_shell_context))
 if __name__ == '__main__':
     manager.run()
     #app.run(debug=True)
-    
