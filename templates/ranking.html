@@ -37,24 +37,29 @@
 					</tr>
 				</thead>
 				<tbody>
+
 					{% for player in players %}
-					<tr>
-						<td>
+
+						<tr>
+							<td>
+								
 							{{ loop.index }}
-						</td>
-						<td>
-							{{ player.score }}
-						</td>
-						<td>
-							<a href="/player/{{ player.id }}">{{ player.name }}</a>
-						</td>
-						<td>
-							{{ player.matches }}
-						</td>
-						<td>
-							{{ player.wins }}
-						</td>
-					</tr>
+
+							</td>
+							<td>
+								{{ player.score }}
+							</td>
+							<td>
+								<a href="/player/{{ player.id }}">{{ player.name }}</a>
+							</td>
+							<td>
+								{{ player.matches }}
+							</td>
+							<td>
+								{{ player.wins }}
+							</td>
+						</tr>
+
 					{% endfor %}
 					
 				</tbody>

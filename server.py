@@ -1,10 +1,12 @@
+# -*- coding: utf-8 -*-
+
 '''
 Created on 15.08.2014
 
 @author: christoph
 '''
 
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session, url_for
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_script import Manager, Shell
@@ -44,6 +46,13 @@ class Player(db.Model):
     
     def __repr__(self):
         return "<Player %s>" % self.id
+    
+    @property
+    def image(self):
+        fn = "face/%s" % self.imgurl
+        return url_for('static', filename=fn)
+    
+    
 
 ##Views
 
@@ -67,7 +76,7 @@ def mainpage():
         winner = Player.query.get(winner_id)
         looser = Player.query.get(looser_id)
         
-        print "[USER VOTED]: winner %s - looser: %s" % (winner, looser)
+        #print "[USER VOTED]: winner %s - looser: %s" % (winner, looser)
         winner, looser = elo.match(winner, looser)
         db.session.commit()
     
