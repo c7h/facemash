@@ -15,6 +15,18 @@
     python server.py runserver
     python Tools/db_create_helper.py
 
-3) run the server
+## run the server
 
     python server.py runserver
+
+
+# Screenshots:
+
+because I love Screenshots!
+
+![voting](http://gerneth.info/files/facemash_img/voting.PNG)
+
+![ranking](http://gerneth.info/files/facemash_img/ranking.PNG)
+
+![overview](http://gerneth.info/files/facemash_img/overview.PNG)
+
