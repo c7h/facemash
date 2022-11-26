@@ -1,4 +1,6 @@
-# How to Use
+![image](https://user-images.githubusercontent.com/2639206/204101320-b13b6441-9e15-44e3-be88-06e8149d3c9a.png)
+
+Blog article with more description here: https://www.gerneth.info/2016/12/11/project-3-facemash-clone/
 
 ## Setup the environment:
 
@@ -19,14 +21,4 @@
 
     python server.py runserver
 
-
-# Screenshots:
-
-because I love Screenshots!
-
-![voting](http://gerneth.info/files/facemash_img/voting.PNG)
-
-![ranking](http://gerneth.info/files/facemash_img/ranking.PNG)
-
-![overview](http://gerneth.info/files/facemash_img/overview.PNG)
 
